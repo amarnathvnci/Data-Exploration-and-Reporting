@@ -1,0 +1,880 @@
+---
+title: "X18105149 Assignment"
+author: "Amarnath V"
+date: "October 15, 2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+
+##Abstract:
+
+This report dicusses about the KDD [Fayyad, Piatetsky-Shapiro, and Smyth (1996)) applied on the financial data. This report covers the data exploration and transformation of financial data. It also explains the patterens of data which were identified by appying the KDD (Fayyad, Piatetsky-Shapiro, and Smyth (1996)) process with the help of data quality report.
+
+##Motivation of Datasets:
+###Dataset 01: Credit Card Default prediction
+Dataset 01 - "Credit card default prediction as a classification problem" (Soui et al., 2018) is the Taiwanese data on which predictive analysis was performed to predict the response variable "default payment next month" which is a binary categorical data that denotes whether credible ot non credible clients. Using the novel sorting smoothing method, the probability of default is predicted. The prediction of response variable has been performed using artificial neural network (ANN).Artificial Neural Network (ANN) are the machine learning model which was insipired the behaviour and structure of human brain [Olden et al., 2008]. This type of ANN focuses on monitored learning, that allows the utlization of input and output datasets to continously varies the weights until the simulated output is as same as the predicted ones [Olaya M E.J., 2013] .This data has been been primarily selected to satisfy this assignment's requirements as mentioned below, so I will prefer to choose dataset 02 - bank marketing for the project rather than this dataset.
+
+1.	This dataset is relevant to financial sector
+2.	This dataset consists of more than 10 features and 20000 instances.
+
+
+Dataset source: https://www.kaggle.com/uciml/default-of-credit-card-clients-dataset/home
+
+###Details of rows and columns of the dataset 01 ( 25 features and 30000 instances)
+ID: ID of each client
+LIMIT_BAL: Amount of given credit in NT dollars (includes individual and family/supplementary credit
+SEX: Gender (1=male, 2=female)
+EDUCATION: (1=graduate school, 2=university, 3=high school, 4=others, 5=unknown, 6=unknown)
+MARRIAGE: Marital status (1=married, 2=single, 3=others)
+AGE: Age in years
+PAY_1: Repayment status in September, 2005 (-2 = Balance paid in full and no transactions this period, -1= Balance paid in full, but account has a positive balance at end of period due to recent transactions for which payment has not yet come due, 0= Customer paid the minimum due amount, but not the entire balance, 1=payment delay for one month, 2=payment delay for two months, ... 8=payment delay for eight months, 9=payment delay for nine months and above)- As per comment in the kaggle website - https://www.kaggle.com/uciml/default-of-credit-card-clients-dataset/discussion/34608
+PAY_2: Repayment status in August, 2005 (scale same as above)
+PAY_3: Repayment status in July, 2005 (scale same as above)
+PAY_4: Repayment status in June, 2005 (scale same as above)
+PAY_5: Repayment status in May, 2005 (scale same as above)
+PAY_6: Repayment status in April, 2005 (scale same as above)
+BILL_AMT1: Amount of bill statement in September, 2005 (NT dollar)
+BILL_AMT2: Amount of bill statement in August, 2005 (NT dollar)
+BILL_AMT3: Amount of bill statement in July, 2005 (NT dollar)
+BILL_AMT4: Amount of bill statement in June, 2005 (NT dollar)
+BILL_AMT5: Amount of bill statement in May, 2005 (NT dollar)
+BILL_AMT6: Amount of bill statement in April, 2005 (NT dollar)
+PAY_AMT1: Amount of previous payment in September, 2005 (NT dollar)
+PAY_AMT2: Amount of previous payment in August, 2005 (NT dollar)
+PAY_AMT3: Amount of previous payment in July, 2005 (NT dollar)
+PAY_AMT4: Amount of previous payment in June, 2005 (NT dollar)
+PAY_AMT5: Amount of previous payment in May, 2005 (NT dollar)
+PAY_AMT6: Amount of previous payment in April, 2005 (NT dollar)
+default.payment.next.month: Default payment (1=yes, 0=no) 
+
+###Dataset 02 - Bank Marketing 
+This dataset - Bank Marketing [Moro et al., 2014] is related to "Bank Marketing". This dataset is improvised by adding the 5 new social and economic features in order to improve the predicton of success. This dataset has been selected because it can provide answer for comparative effectiveness research (CER).Usually among various marketing domains, customer segmentation(analysis) is considered important sector in research and organization practices. Different data mining techniques will be used to perform efficient marketing. RFM (Recency, frequence and monetary methods) technique is one of those technique used to perform customer segmentation which is most useful to produce marketing as discussed before [Olson, D.L. & Chae, B., 2012]. This dataset has been analysed by applying CRISP-DM methodology [Moro S., 2011].
+
+###Details of rows and columns of the dataset 01 ( 21 features and 41188 instances)
+
+   1 - age (numeric)
+   2 - job : type of job (categorical: "admin.","blue-collar","entrepreneur","housemaid","management","retired","self-employed","services","student","technician","unemployed","unknown")
+   3 - marital : marital status (categorical: "divorced","married","single","unknown"; note: "divorced" means divorced or widowed)
+   4 - education (categorical: "basic.4y","basic.6y","basic.9y","high.school","illiterate","professional.course","university.degree","unknown")
+   5 - default: has credit in default? (categorical: "no","yes","unknown")
+   6 - housing: has housing loan? (categorical: "no","yes","unknown")
+   7 - loan: has personal loan? (categorical: "no","yes","unknown")
+   # related with the last contact of the current campaign:
+   8 - contact: contact communication type (categorical: "cellular","telephone") 
+   9 - month: last contact month of year (categorical: "jan", "feb", "mar", ..., "nov", "dec")
+  10 - day_of_week: last contact day of the week (categorical: "mon","tue","wed","thu","fri")
+  11 - duration: last contact duration, in seconds (numeric). Important note:  this attribute highly affects the output target (e.g., if duration=0 then y="no"). Yet, the duration is not known before a call is performed. Also, after the end of the call y is obviously known. Thus, this input should only be included for benchmark purposes and should be discarded if the intention is to have a realistic predictive model.
+   # other attributes:
+  12 - campaign: number of contacts performed during this campaign and for this client (numeric, includes last contact)
+  13 - pdays: number of days that passed by after the client was last contacted from a previous campaign (numeric; 999 means client was not previously contacted)
+  14 - previous: number of contacts performed before this campaign and for this client (numeric)
+  15 - poutcome: outcome of the previous marketing campaign (categorical: "failure","nonexistent","success")
+   # social and economic context attributes
+  16 - emp.var.rate: employment variation rate - quarterly indicator (numeric)
+  17 - cons.price.idx: consumer price index - monthly indicator (numeric)     
+  18 - cons.conf.idx: consumer confidence index - monthly indicator (numeric)     
+  19 - euribor3m: euribor 3 month rate - daily indicator (numeric)
+  20 - nr.employed: number of employees - quarterly indicator (numeric)
+  21 - y: response variable
+
+Dataset source: http://archive.ics.uci.edu/ml/datasets/Bank+Marketing#
+
+
+###Reading the Datasets:
+###Dataset 01:
+
+```{r}
+data1 <- read.csv(file="C://Users//admin//Desktop//Data Analytics//Data1.csv")
+```
+###Dataset 02:
+```{r}
+data2 <- read.csv(file="C://Users//admin//Desktop//Data Analytics//Data2a.csv", na.strings = c("unknown"))
+```
+
+
+##Exploration:
+
+###Verifying metadata of datasets:
+###Dataset 01:
+As per repository page, dataset01 must have 25 features and 30000 instances. Response variable is "default.payment.next.month" which is binary categorical.
+
+X (X1,....,X24) is, (ID,LIMIT_BAL,SEX,EDUCATION,MARRIAGE,AGE,PAY_0,PAY_2,PAY_3,PAY_4,PAY_5,PAY_6,BILL_AMT1,BILL_AMT2,BILL_AMT3,BILL_AMT4,BILL_AMT5,BILL_AMT6,PAY_AMT1,PAY_AMT2,PAY_AMT3,PAY_AMT4,PAY_AMT5,PAY_AMT6) 
+
+Among 25 features, SEX, EDUCATION, MARRIAGE, PAY_0, PAY_2, PAY_3, PAY_4, PAY_5, PAY_6, default.payment.next.month must be categorical features.
+
+###Structure of the Datasets:
+###Dataset 01:
+```{r}
+str(data1)
+```
+###Dataset 02:
+```{r}
+str(data2)
+```
+###Dataset 01:
+Dataset01 has 25 features and 30000 instances.
+By looking at the struture of dataset01 we can see that features, SEX, EDUCATION, MARRIAGE, PAY_0, PAY_2, PAY_3, PAY_4, PAY_5, PAY_6, default.payment.next.month are not categorical features which are supposed to be the categorical features. So,we must convert these features into categorical using the function as.factor(). In addition to these, the feature "ID" acts as just serial number which is not contributing anything to predict the predictive variable so we will go with 24 features by eliminating it.
+```{r}
+data1 <- data1[,2:ncol(data1)]
+str(data1)    #structure of data1 after removing "ID"
+data1$SEX <- as.factor(data1$SEX)
+data1$EDUCATION <- as.factor(data1$EDUCATION)
+data1$MARRIAGE <- as.factor(data1$MARRIAGE)
+data1$PAY_0 <- as.factor(data1$PAY_0)
+data1$PAY_2 <- as.factor(data1$PAY_2)
+data1$PAY_3 <- as.factor(data1$PAY_3)
+data1$PAY_4 <- as.factor(data1$PAY_4)
+data1$PAY_5 <- as.factor(data1$PAY_5)
+data1$PAY_6 <- as.factor(data1$PAY_6)
+data1$default.payment.next.month <- as.factor(data1$default.payment.next.month)
+str(data1)
+```
+
+Now, we can check the structure of the dataset 01, all those 10 features became categorical features as expected.
+Here, responding variable is "default payment next month" which is a binary categorical data.
+X(X1,X2,......,X25) are, (ID,LIMIT_BAL,SEX,EDUCATION,MARRIAGE,AGE,PAY_0,PAY_2,PAY_3,PAY_4,PAY_5,PAY_6,BILL_AMT1,BILL_AMT2,BILL_AMT3,BILL_AMT4,BILL_AMT5,BILL_AMT6,PAY_AMT1,PAY_AMT2,PAY_AMT3,PAY_AMT4,PAY_AMT5,PAY_AMT6). Among these SEX, EDUCATION, MARRIAGE, PAY_0, PAY_2, PAY_3, PAY_4, PAY_5, PAY_6, default.payment.next.month are categorical features.
+###Dataset 02:
+#Dataset02 has 21 features and 41188 instances.
+#####Here, responding variable is "Y" which is a binary categorical data.
+
+#####X(X1,........,X31)are, (age,job,marital,education,default,housing,loan,contact,month,day_of_week,duration,campaign,pdays,previous,poutcome,emp.var.rate,cons.price.idx,cons.conf.idx,euribor3m,nr.employed,y), this dataset exhibit almost all fundamental data types.
+
+###Treating Missing Attribute Values: 
+#####There are several missing values in some categorical attributes. These missing values can be treated using imputation techniques. 
+
+
+###Missing value:
+A missing value is one whose value is unknown. Missing values are represented in R by the NA symbol. NA is a special value whose properties are different from other values. NA is one of the very few reserved words in R: you cannot give anything this name. (Source: http://faculty.nps.edu/sebuttre/home/R/missings.html)
+
+
+###Finding missing value for dataset 01:
+In the Dataset 01, the "education" feature has categorical values from 1 to 6 among these 5 and 6 are unknown and in addition to these 0 also exists in education feature which is also a unknown value. Like dataset 02, dataset 01's source website doesn't mentioned direcly that unknown values are missing values. So, let's make an assumption that unknown values here are missing values and process further to generate Data Quality Report by performing transformation and also generate another DQR without transforming data. 
+
+###Tranformation of data for dataset 01
+```{r}
+data1a <- data1
+#Converting 0's,5's and 6's to NA's in the feature data1a$EDUCATION
+data1a$EDUCATION <- sapply(data1a$EDUCATION, FUN = function(x) {if(x == 0 | x == 5 | x == 6) {x <- NA} else {x <- x}})
+#Conerting the EDUCATION feature back to factor datatype
+data1a$EDUCATION <- as.factor(data1a$EDUCATION)
+#Summarise of EDUCATION feature of Dataset 01
+summary(data1a$EDUCATION)
+#Converting 0's to 3's
+data1a$MARRIAGE <- sapply(data1a$MARRIAGE, FUN = function(x) {if(x == 0) {x <- NA} else {x <- x}})
+data1a$MARRIAGE <- as.factor(data1a$MARRIAGE)
+summary((data1a$MARRIAGE))
+```
+
+So, Here we have transformed unknown values(0, 5, 6) of the feature EDUCATION to NA's. And also for a feature MARRIAGE we have converted unknow value "0's" to "NA's".
+
+
+###Volume of data missing in the dataset 01: 
+```{r}
+missing1 <- sapply(data1a, FUN = function(x) {sum(is.na(x) / length(x) * 100)})
+#Volume of missing value
+missing1
+
+```
+
+
+###Finding missing value for dataset 02:
+As mentioned in the source website, in this dataset missing values are labelled as "unknown" which were replaced by "N/A" while reading the dataset itself. Now, let us find the features that have missing value using the below command.
+
+###Volume of data missing in the dataset 02: 
+```{r}
+missing2 <- sapply(data2, FUN = function(x) {sum(is.na(x) / length(x) * 100)})
+#Volume of missing value
+missing2
+
+```
+
+
+
+##Transformation:
+
+###Treating the missing value of dataset 01:
+```{r}
+MaxTable <- function(x){
+     dd <- unique(x)
+     dd[which.max(tabulate(match(x,dd)))]
+}
+```
+
+Using this MaxTable function we can replace missing values with the most frequent value in categorical data. As we got features Education and MARRIAGE (Both are Categorical data) in the dataset 01 so we can use this imputation technique.
+```{r}
+data1a$EDUCATION[is.na(data1a$EDUCATION)] <- MaxTable(data1a$EDUCATION)
+data1a$MARRIAGE[is.na(data1a$MARRIAGE)] <- MaxTable(data1a$MARRIAGE)
+summary(data1a$EDUCATION)
+summary(data1a$MARRIAGE)
+summary(data1a)
+```
+
+Now, by checking the summary of the features EDUCATION and MARRIAGE as well as whole dataset01 we can ensure that all assumed missing vlaues were replaced with most frequent value in the categorical features EDUCATION and MARRIAGE and there is no missing value in the dataset 01.
+
+####Relationship between features of the Dataset 01 with and without transformation:
+
+Let's discuss about the relationship between various features of the dataset 01 using graphs.
+```{r}
+
+par(mfrow = c(3,3))
+#Default payment vs Sex
+barplot(table(data1$default.payment.next.month,data1$SEX),beside = T, main = "Defaultpayment vs Sex")                #Data without transformation
+barplot(table(data1a$default.payment.next.month,data1a$SEX),beside = T, main = "Default payment vs Sex")             #Data with transformation
+
+#Default payment vs Education
+barplot(table(data1$default.payment.next.month,data1$EDUCATION),beside = T, main = "Defaultpayment vs Education")    #Data without transformation
+barplot(table(data1a$default.payment.next.month,data1a$EDUCATION),beside = T, main = "Default payment vs Education") #Data with transformation
+
+#Default payment vs Marriage status
+barplot(table(data1$default.payment.next.month,data1$MARRIAGE),beside = T, main = "Defaultpayment vs Marriage")      #Data without transformation
+barplot(table(data1a$default.payment.next.month,data1a$MARRIAGE),beside = T, main = "Default payment vs Marriage")   #Data with transformation
+
+#Default payment vs Age 
+barplot(table(data1$default.payment.next.month,data1$AGE),beside = T, main = "Defaultpayment vs Age")       #Data without transformation
+barplot(table(data1a$default.payment.next.month,data1a$AGE),beside = T, main = "Default payment vs Age")    #Data with transformation
+
+#Sex vs Education
+barplot(table(data1$SEX,data1$EDUCATION),beside = T, main = "Sex vs Education")                             #Data without transformation
+barplot(table(data1a$SEX,data1a$EDUCATION),beside = T, main = "Sex vs Education")                           #Data with transformation
+
+#Marriage status vs Age
+barplot(table(data1$MARRIAGE,data1$AGE),beside = T, main = "Marriage vs Age")                               #Data without transformation
+barplot(table(data1a$MARRIAGE,data1a$AGE),beside = T, main = "Marriage vs Age")                             #Data with transformation
+```
+
+In the above first four graphs, dark shaded are customers not opted for default payment and light shaded are customer opted for default payment.In the fifth graph dark shade represents male (1) and light shade represents female. In the sixth graph, dark shaded represents married(1), light shaded represents single(2) and white represents others(3).
+
+
+
+##### Transformation of data for dataset 02
+So here, we can see 6 features namely job, martial, education, default, housing and loan are having missing values. All these features are categorized variable so we can replace missing value with the most frequent class value. To find the most frequent class value let us apply the MaxTable function for each of the features that has missing value,
+
+
+So, here we going to replace missing value with the value returned by using the MaxTable function to the features that have missing value. Firstly, will have a look at the dataset before performing imputation.
+```{r}
+summary(data2)
+```
+As we mentioned above, we can see 6 features are having missing values.
+####job:
+```{r}
+data2$job[is.na(data2$job)] <- MaxTable(data2$job)
+```
+
+####marital:
+```{r}
+data2$marital[is.na(data2$marital)] <- MaxTable(data2$marital)
+```
+
+####education:
+```{r}
+data2$education[is.na(data2$education)] <- MaxTable(data2$education)
+```
+
+####default:
+```{r}
+data2$default[is.na(data2$default)] <- MaxTable(data2$default)
+```
+
+####housing;
+```{r}
+data2$housing[is.na(data2$housing)] <- MaxTable(data2$housing)
+```
+
+####loan:
+```{r}
+data2$loan[is.na(data2$loan)] <- MaxTable(data2$loan)
+```
+
+Let's have a look at the dataset after performing imputation to the missing values. Now there should not be any missing values in the dataset
+
+```{r}
+summary(data2)
+```
+
+After performing imputation let's have a look at the datset to ensure whether fundamental datatypes of dataset are correct and the categorical data has appropriate labels. This can be done by looking into structure of this dataset,
+
+```{r}
+str(data2)
+```
+
+
+###Finding useful feature in the dataset 02:
+Let us find the feature with more unique values,
+```{r}
+use2 <- sapply(data2, FUN = function(x) {length(unique(x))})
+use2
+```
+
+So, the "duration" feature has the most number of unique values in the dataset. When comparing "duration" with "y(response variable)" we can even find "duration" feature has serious impact on "y" by looking at the dataset itself. For instance, "y" will be always 0 when "duration" is 0.But with this information we can say that this is useful feature but not perfect feature because even higher "duration" value end up in no for "y".
+
+
+
+###Outliers;
+An outlier is an observation in a data set that lies a substantial distance from other observations. These unusual observations can have a disproportionate effect on statistical analysis, such as the mean, which can lead to misleading results. Outliers can provide useful information about your data or process, so it's important to investigate them. Of course, you have to find them first. 
+
+###Outliers in the dataset 01:
+Dataset 01 has binary categorical response variable and most of its useful features are categorical data, so finding outliers in those categorical data is tricky, so let us assume the  least occuring value in the categorical data as outliers and we will create the DQR with and without outlier from the tranformed data of dateset 01(data1a).
+
+In this dataset we can identify the least occuring values of categorical features which is nothing but other categories ("4" in EDUCATION and "3" in the feature MARRIAGE), this can be ensured by checking the summary of the dataset.
+
+```{r}
+#Cloning the transformed dataset 01
+data1b <- data1a
+#Summary of clone of transformed dataset 01
+summary(data1b)
+
+#Declaration of function to return least frequent value in the categorical variable.
+MinTable <- function(x){
+      dd <- unique(x)
+      dd[which.min(tabulate(match(x,dd)))]
+}
+
+
+#Transforming least frequent value to NA's for EDUCATION feature
+data1b$EDUCATION <- sapply(data1b$EDUCATION, FUN = function(x) {if(x == MinTable(data1b$EDUCATION)) {x <- NA} else {x <- x}})
+data1b$EDUCATION <- as.factor(data1b$EDUCATION)   #converting back to categorical
+summary(data1b$EDUCATION)  #summarizing to check
+
+
+#Transforming least frequent value to NA's for MARRIAGE feature
+data1b$MARRIAGE <- sapply(data1b$MARRIAGE, FUN = function(x) {if(x == MinTable(data1b$MARRIAGE)) {x <- NA} else {x <- x}})
+data1b$MARRIAGE <- as.factor(data1b$MARRIAGE)   #converting back to categorical
+summary(data1b$MARRIAGE)   #summarizing to check
+
+#Removing entire rows in the dataset with NA's
+data1b <- na.omit(data1b)
+
+#Let's check whether outliers we removed via plotting graph
+barplot(table(data1b$default.payment.next.month,data1b$EDUCATION),beside = T, main="Defaultpayment vs EDUCATION")   #Data after removing outlier
+barplot(table(data1b$default.payment.next.month,data1b$MARRIAGE),beside = T, main="Defaultpayment vs Marriage")     #Data after removing outlier
+```
+
+
+###Outliers in the dataset 02:
+Let's visualise the relationship between "duration" and "y",
+
+```{r}
+boxplot(data2$duration ~ data2$y, ylab='Duration', main='Duration vs Y(Predictive variable)')
+```
+
+We can see, most of the values stays between 0 to 2000 and there are more outliers in the box plot which has to be treated. In order to treat this, let's create a benchmark and remove the values that falls beyond the benchmark. Benchmark can be calucalted by the following formula, 
+Benchmark = third-quantile + (1.5 * IQR(x)), where, IQR = Interquantile Range. Instead of disturbing existing data frame we can make a copy and remove outliers in it.
+```{r}
+data2a <- data2
+#to find third quantile
+quantile(data2a$duration)
+bench <- 319 + (1.5 * IQR(data2a$duration))
+bench
+```
+
+Now, we can treat outliers by replacing the values of "duration" feature in the dataset which are greater than the benchmark with "N/A" and then remove the entire rows that has "N/A".
+```{r}
+treat <- data2a$duration > bench
+data2a$duration[treat] <- NA
+data2a <- na.omit(data2a)
+boxplot(data2a$duration ~ data2a$y)
+```
+
+In the above boxplot we can see that significant amount of outliers are removed.
+
+Now, let us create Data Quality Report (DQR) each for data2(with outliers) and data2a(without outliers).
+
+
+##Data Quality Report:
+
+###Declaration of function to generate Numeric Data Quality Report:
+
+```{r}
+library(ISLR)
+dataQualityNum <- function(df) {
+#Filteration of numeic values in the dataset
+n <- sapply(df, function(x) {is.numeric(x)})
+df_num <- df[, n]
+# Number of numeric rows
+instances <- sapply(df_num, FUN=function(x) {length(x)})
+# Number of missing values (It must be zero for all numeric features as we are generating DQR for transformed data)
+missing <- sapply(df_num, FUN=function(x) {sum(is.na(x))})
+missing <- missing / instances * 100
+# Length of the vector of unique values
+unique <- sapply(df_num, FUN=function(x) {length(unique(x))})
+# Calculation of the quantiles
+quantiles <- t(sapply(df_num, FUN=function(x) {quantile(x)}))
+# Calculation of the mean
+means <- sapply(df_num, FUN=function(x) {mean(x)})
+# Calculation of the standard deviation
+sds <- sapply(df_num, FUN=function(x) {sd(x)})
+# Build a dataframe of all components of the DQR
+df_frame <- data.frame(Feature=names(df_num),
+Instances=instances,
+Missing=missing,
+Cardinality=unique,
+Min=quantiles[,1],
+Q1=quantiles[,2],
+Feature=names(df_num),
+Median=quantiles[,3],
+Q3=quantiles[,4],
+Max=quantiles[,5],
+Mean=means,
+Stdev=sds)
+#To fit the table on the page, the abovecolumns were slightly renamed.
+# Removal of rownames -- as they have no meaning here
+rownames(df_frame) <- NULL
+return(df_frame)
+}
+```
+
+### Declaring a function to generate Categorical Data Quality Report:
+
+```{r}
+dataQualityCat <- function(df) {
+# Filteration of categorical data from dataset 2 without outliers
+n <- sapply(df, function(x) {is.numeric(x)})
+df_categoricals <- df[, !n]
+# Number of categorical rows in each feature
+instances <- sapply(df_categoricals, FUN=function(x) {length(x)})
+# Number of missing values (It must be zero for all numeric features as we are generating DQR for transformed data)
+missing <- sapply(df_categoricals, FUN=function(x) {sum(is.na(x))})
+missing <- missing / instances * 100
+# Length of the vector of unique values
+unique <- sapply(df_categoricals, FUN=function(x) {length(unique(x))})
+# Finding the most frequent categorical level
+modeFreqs <- sapply(df_categoricals, FUN=function(x) {
+t <- table(x)
+modeFreq <- max(t)
+return(modeFreq)
+})
+# For all modes, get their frequency
+modes <- sapply(df_categoricals, FUN=function(x) {
+t <- table(x)
+modeFreq <- max(t)
+mode <- names(t)[t==modeFreq]
+return(mode)
+})
+# Now throw away the mode and repeat for the second mode
+modeFreqs2 <- sapply(df_categoricals, FUN=function(x) {
+t <- table(x)
+modeFreq <- max(t)
+mode <- names(t)[t==modeFreq]
+# we remove the 1st mode here
+x <- x[x != mode]
+t <- table(x)
+mode2Freq <- max(t)
+return(mode2Freq)
+})
+modes2 <- sapply(df_categoricals, FUN=function(x) {
+t <- table(x)
+modeFreq <- max(t)
+mode <- names(t)[t==modeFreq]
+# we remove the 1st mode here
+x <- x[x != mode]
+t <- table(x)
+mode2Freq <- max(t)
+mode2 <- names(t)[t==mode2Freq]
+return(mode2)
+})
+# Build data.frame as before, but also derive the mode frequenies
+df_categorical <- data.frame(Feature=names(df_categoricals),
+Inst=instances,
+Miss=missing,
+Card=unique,
+FstMod=modes,
+FstModFrq=modeFreqs,
+Feature=names(df_categoricals),
+FstModPnt=modeFreqs/instances*100,
+SndMod=modes2,
+SndModFrq=modeFreqs2,
+SndModPnt=modeFreqs2/instances*100)
+#To fit the table on the page, the above columns were slightly renamed.
+rownames(df_categorical) <- NULL
+return(df_categorical)
+}
+```
+
+### Data Quality report for numeric data of Dataset 1(without assuming missing value):
+
+
+```{r}
+# Calling a function to create a DQR for Dataset 1 without assuming missing value:
+df1_dqrnum <- dataQualityNum(data1)
+library(pander)
+pandoc.table(df1_dqrnum, style = "grid", caption = "Numeric DQR for datset 1")
+```
+
+###Plotting the features' distribution of Numeric data of dataset 1 without assumed missing value:
+
+```{r}
+par(mfrow = c(2,2))
+hist(data1$LIMIT_BAL, main="Limit Balance")
+hist(data1$AGE, main="Age")
+hist(data1$BILL_AMT1, main="BILL_AMT1")
+hist(data1$BILL_AMT2, main="BILL_AMT2")
+hist(data1$BILL_AMT3, main="BILL_AMT3")
+hist(data1$BILL_AMT4, main="BILL_AMT4")
+hist(data1$BILL_AMT5, main="BILL_AMT5")
+hist(data1$BILL_AMT6, main="BILL_AMT6")
+hist(data1$PAY_AMT1, main="PAY_AMT1")
+hist(data1$PAY_AMT2, main="PAY_AMT2")
+hist(data1$PAY_AMT3, main="PAY_AMT3")
+hist(data1$PAY_AMT4, main="PAY_AMT4")
+hist(data1$PAY_AMT5, main="PAY_AMT5")
+hist(data1$PAY_AMT6, main="PAY_AMT6")
+```
+
+Most of the numeric features are not normally distributed,
+
+Alomst all of the numeric features of dataset 01 without assumed missing value are right skewed.
+
+### Data Quality report for numeric data of Dataset 1(with treated assumed missing values and without outliers):
+
+
+```{r}
+# Calling a function to create a DQR for Dataset 1 with treated assumed missing values and without outliers:
+df1a_dqrnum <- dataQualityNum(data1a)
+library(pander)
+pandoc.table(df1a_dqrnum, style = "grid", caption = "Numeric DQR for datset 1a")
+```
+
+###Plotting the features' distribution of Numeric data of dataset 1 with treated assumed missing values and without outliers:
+
+```{r}
+par(mfrow = c(2,2))
+hist(data1a$LIMIT_BAL, main="Limit Balance")
+hist(data1a$AGE, main="Age")
+hist(data1a$BILL_AMT1, main="BILL_AMT1")
+hist(data1a$BILL_AMT2, main="BILL_AMT2")
+hist(data1a$BILL_AMT3, main="BILL_AMT3")
+hist(data1a$BILL_AMT4, main="BILL_AMT4")
+hist(data1a$BILL_AMT5, main="BILL_AMT5")
+hist(data1a$BILL_AMT6, main="BILL_AMT6")
+hist(data1a$PAY_AMT1, main="PAY_AMT1")
+hist(data1a$PAY_AMT2, main="PAY_AMT2")
+hist(data1a$PAY_AMT3, main="PAY_AMT3")
+hist(data1a$PAY_AMT4, main="PAY_AMT4")
+hist(data1a$PAY_AMT5, main="PAY_AMT5")
+hist(data1a$PAY_AMT6, main="PAY_AMT6")
+```
+
+Even after transforming data with assumed missing value the data looks same as before but outliers(least frequent value) were removed.
+
+### Data Quality report for numeric data of Dataset 1(with treated assumed missing values and outliers):
+
+```{r}
+# Calling a function to create a DQR for Dataset 1 with treated assumed missing values and outliers:
+df1b_dqrnum <- dataQualityNum(data1a)
+library(pander)
+pandoc.table(df1b_dqrnum, style = "grid", caption = "Numeric DQR for datset 1b")
+```
+
+###Plotting the feature's distribution of Numeric data of dataset 1 with treated assumed missing values and outliers:
+
+```{r}
+par(mfrow = c(2,2))
+hist(data1b$LIMIT_BAL, main="Limit Balance")
+hist(data1b$AGE, main="Age")
+hist(data1b$BILL_AMT1, main="BILL_AMT1")
+hist(data1b$BILL_AMT2, main="BILL_AMT2")
+hist(data1b$BILL_AMT3, main="BILL_AMT3")
+hist(data1b$BILL_AMT4, main="BILL_AMT4")
+hist(data1b$BILL_AMT5, main="BILL_AMT5")
+hist(data1b$BILL_AMT6, main="BILL_AMT6")
+hist(data1b$PAY_AMT1, main="PAY_AMT1")
+hist(data1b$PAY_AMT2, main="PAY_AMT2")
+hist(data1b$PAY_AMT3, main="PAY_AMT3")
+hist(data1b$PAY_AMT4, main="PAY_AMT4")
+hist(data1b$PAY_AMT5, main="PAY_AMT5")
+hist(data1b$PAY_AMT6, main="PAY_AMT6")
+```
+
+Even after transforming data with assumed missing value the data looks same as before, all the numeric data looks right skewed.
+
+
+###Data Quality Report for categorical data of dataset 1 without assumed missing value:
+```{r}
+# Calling a function to create a DQR for Dataset 1 without assumed missing value:
+df1_categorical <- dataQualityCat(data1)
+library(pander)
+pandoc.table(df1_categorical, style = "grid", caption = "Categorical DQR for dataset 1")
+```
+
+
+###Plotting the features' distribution of categorical data of dataset 1 without assuming missing value:
+```{r}
+par(mfrow = c(2,2))
+barplot(table(data1$SEX), main="Sex")
+barplot(table(data1$EDUCATION), main="Education")
+barplot(table(data1$MARRIAGE), main="Marriage")
+barplot(table(data1$AGE), main="Àge")
+barplot(table(data1$PAY_0), main="PAY_0")
+barplot(table(data1$PAY_2), main="PAY_2")
+barplot(table(data1$PAY_3), main="PAY_3")
+barplot(table(data1$PAY_4), main="PAY_4")
+barplot(table(data1$PAY_5), main="PAY_5")
+barplot(table(data1$PAY_6), main="PAY_6")
+barplot(table(data1$default.payment.next.month), main="Default Payment")
+```
+
+As numeric data, categorical data also not normally distributed and most of them are right skewed and the data are too irregular.
+
+###Data Quality Report for categorical data of dataset 1 with treated assumed missing value and without outliers:
+```{r}
+# Calling a function to create a DQR for dataset 1 with treated assumed missing value and without outliers:
+df1a_categorical <- dataQualityCat(data1a)
+library(pander)
+pandoc.table(df1a_categorical, style = "grid", caption = "categorical DQR for dataset 1a")
+```
+
+
+###Plotting the features' distribution of categorical data of dataset 1 with treated assumed missing value and without outliers:
+```{r}
+par(mfrow = c(2,2))
+barplot(table(data1a$SEX), main="Sex")
+barplot(table(data1a$EDUCATION), main="Education")
+barplot(table(data1a$MARRIAGE), main="Marriage")
+barplot(table(data1a$AGE), main="Àge")
+barplot(table(data1a$PAY_0), main="PAY_0")
+barplot(table(data1a$PAY_2), main="PAY_2")
+barplot(table(data1a$PAY_3), main="PAY_3")
+barplot(table(data1a$PAY_4), main="PAY_4")
+barplot(table(data1a$PAY_5), main="PAY_5")
+barplot(table(data1a$PAY_6), main="PAY_6")
+barplot(table(data1a$default.payment.next.month), main="Default Payment")
+```
+As numeric data, categorical data with assumed missing value and without outlier also not normally distributed and most of them are right skewed and the data are too irregular.
+
+###Data Quality Report for categorical data of dataset 1 with treated assumed missing value and outliers:
+```{r}
+# Calling a function to create a DQR for dataset 1 with treated assumed missing value and outliers:
+df1b_categorical <- dataQualityCat(data1b)
+library(pander)
+pandoc.table(df1b_categorical, style = "grid", caption = "categorical DQR for dataset 1b")
+```
+
+
+###Plotting the features' distribution of categorical data of dataset 1 with treated assumed missing value and outliers:
+```{r}
+par(mfrow = c(2,2))
+barplot(table(data1b$SEX), main="Sex")
+barplot(table(data1b$EDUCATION), main="Education")
+barplot(table(data1b$MARRIAGE), main="Marriage")
+barplot(table(data1b$AGE), main="Àge")
+barplot(table(data1b$PAY_0), main="PAY_0")
+barplot(table(data1b$PAY_2), main="PAY_2")
+barplot(table(data1b$PAY_3), main="PAY_3")
+barplot(table(data1b$PAY_4), main="PAY_4")
+barplot(table(data1b$PAY_5), main="PAY_5")
+barplot(table(data1b$PAY_6), main="PAY_6")
+barplot(table(data1b$default.payment.next.month), main="Default Payment")
+```
+
+As numeric data, categorical data with assumed missing value and outlier also not normally distributed and most of them are right skewed and the data are too irregular.
+
+
+### Data Quality report for numeric data of Dataset 2(with outliers):
+
+
+```{r}
+# Calling a function to create a DQR for Dataset 2 with outlier:
+df2_dqrnum <- dataQualityNum(data2)
+library(pander)
+pandoc.table(df2_dqrnum, style = "grid", caption = "Data Quality Report for numeric data of datset 2 with outlier")
+```
+
+###Plotting the features' distribution of Numeric data of dataset 2 with outlier:
+
+```{r}
+par(mfrow = c(2,2))
+hist(data2$age, main="Age")
+hist(data2$duration, main="Duration")
+hist(data2$campaign, main="Campaign")
+hist(data2$pdays, main="Pdays")
+hist(data2$previous, main="Previous")
+hist(data2$emp.var.rate, main="Emp.var.rate")
+hist(data2$cons.price.idx, main="Cons.price.idx")
+hist(data2$cons.conf.idx, main="Cons.conf.idx")
+hist(data2$euribor3m, main="Euribor3m")
+hist(data2$nr.employed, main="Nr.employed")
+```
+
+None of the numeric data of dataset 01 are uniformly distributed. Among these, agr, duration, campaignand previous are right skewed, pdays and emp.var.rate are right skewed and cons.price.idx, cons.conf.idx, euribor3m and nr.emplyeed are multimodal.
+
+###Data Quality Report for numeric data of datset 2 without outlier:
+```{r}
+# Calling a function to create a DQR for Dataset 2 without outlier:
+df2a_dqrnum <- dataQualityNum(data2a)
+library(pander)
+pandoc.table(df2a_dqrnum, style = "grid", caption = "Data Quality Report for numeric data of datset 2 without outlier")
+```
+
+
+###Plotting the features' distribution of numeric data of dataset 2 without outlier:
+```{r}
+par(mfrow = c(2,2))
+hist(data2a$age, main="Age")
+hist(data2a$duration, main="Duration")
+hist(data2a$campaign, main="Campaign")
+hist(data2a$pdays, main="Pdays")
+hist(data2a$previous, main="Previous")
+hist(data2a$emp.var.rate, main="Emp.var.rate")
+hist(data2a$cons.price.idx, main="Cons.price.idx")
+hist(data2a$cons.conf.idx, main="Cons.conf.idx")
+hist(data2a$euribor3m, main="Euribor3m")
+hist(data2a$nr.employed, main="Nr.employed")
+```
+
+After removing outliers numeric variable duration became more accurate and clear and remains right skewed. All other numeric variables are also remain same. 
+
+
+###Data Quality Report for categorical data of dataset 2 with outlier:
+```{r}
+# Calling a function to create a DQR for Dataset 2 with outlier:
+df2_categorical <- dataQualityCat(data2)
+library(pander)
+pandoc.table(df2_categorical, style = "grid", caption = "Data Quality Report for categorical data of datset 2 with outlier")
+```
+
+
+###Data Quality Report for categorical data of dataset 2 without outlier:
+```{r}
+# Calling a function to create a DQR for Dataset 2 without outlier:
+df2a_categorical <- dataQualityCat(data2a)
+library(pander)
+pandoc.table(df2a_categorical, style = "grid", caption = "Data Quality Report for categorical data of datset 2 without outlier")
+```
+
+
+
+
+###Plotting the features' distribution of categorical data of dataset 2 with outlier:
+```{r}
+par(mfrow = c(2,2))
+barplot(table(data2$job), main="Job")
+barplot(table(data2$marital), main="Marital")
+barplot(table(data2$education), main="Education")
+barplot(table(data2$default), main="Default")
+barplot(table(data2$housing), main="Housing")
+barplot(table(data2$loan), main="Loan")
+barplot(table(data2$contact), main="Contact")
+barplot(table(data2$month), main="Month")
+barplot(table(data2$day_of_week), main="Day_of_week")
+barplot(table(data2$poutcome), main="Poutcome")
+barplot(table(data2$y), main="Y(Predictive variable)")
+```
+
+Among categorical variables of dataset 02 almost all are not normally ditributed. Among those categorical variable job, education, month are multi modal where as marital, poutcome are  unimodal, where as other are either right or left skewed.
+
+
+###Plotting the features' distribution of categorical data of dataset 2 without outlier:
+```{r}
+
+par(mfrow = c(2,2))
+barplot(table(data2a$job), main="Job")
+barplot(table(data2a$marital), main="Marital")
+barplot(table(data2a$education), main="Education")
+barplot(table(data2a$default), main="Default")
+barplot(table(data2a$housing), main="Housing")
+barplot(table(data2a$loan), main="Loan")
+barplot(table(data2a$contact), main="Contact")
+barplot(table(data2a$month), main="Month")
+barplot(table(data2a$day_of_week), main="Day_of_week")
+barplot(table(data2a$poutcome), main="Poutcome")
+barplot(table(data2a$y), main="Y(Predictive variable)")
+```
+
+The removal of outliers has no impact on categorical variables of dataset 02 so all of them remains same.
+
+##Discussion:
+Let's compare these two different datsets using common graphical visualisation.
+
+Firsly, we will compare the quanittative variables(numeric). Usually while comparing numeric variables of two datsets we will mostly focus on following 4 features namesly,
+
+1. Center - Median of the variable
+2. Spread - The range or Interquantile range
+3. Shape - Symmetry, skewness, peaks
+4. Unusual features - Gaps, clusters, outliers
+
+First, let us discuss about a common numericl variable in both datsets "Age".
+
+###Dot Plot:
+```{r}
+#Generting dot plot for numerica vriable age of dataset 01
+dotchart(data1$AGE, xlab="Age")
+
+#Finding of 4 factors for numeric variable "Age" of dataset 01
+#it is a asymmetric shape but when outliers are remove it almost forms bellshape
+shape1 <- "Asymmetric bell curve" 
+uf1 <- "Gaps and Outliers"
+range1 <- range(data1$AGE)
+rl1 <- range1[1]
+rh1 <- range1[2]
+#let's create a dataframe in order to explain the above mentioned 4 factors in the table format.
+cmp1 <- data.frame(Center = median(data1$AGE),
+                                Spreadlowerrange = rl1,
+                                Spreadhigherrange = rh1,
+                                Shape = shape1,
+                                UnusualFeature = uf1)
+
+
+pandoc.table(cmp1, style = "grid", caption = "Factors of numerical variable Age of datset 01") #Generate chart for dataset01's age
+
+#Generting dot plot for numerica vriable age of dataset 02
+dotchart(data2$age, xlab="Age")
+#Finding of 4 factors for numeric variable "Age" of dataset 02
+#it is a asymmetric shape but when outliers are remove it almost forms inverted bellshape
+shape2 <- "Asymmetric inverted bell curve" 
+uf2 <- "Gaps and Outliers"
+range2 <- range(data2$age)
+rl2 <- range2[1]
+rh2 <- range2[2]
+#let's create a function in order to explain the above mentioned 4 factors in the table format.
+cmp2 <- data.frame(Center = median(data2$age),
+                                Spreadlowerrange = rl2,
+                                Spreadhigherrange = rh2,
+                                Shape = shape2,
+                                UnusualFeature = uf2)
+
+
+pandoc.table(cmp2, style = "grid", caption = "Factors of numerical variable Age of datset 02") #Generate chart for dataset02's age
+
+```
+
+###Now, let's compare the common categorical variables 
+```{r}
+barplot(table(data1$EDUCATION,data1$MARRIAGE),beside = T,legend.text = T, main="Education vs Marry status") 
+barplot(table(data1$EDUCATION,data1$default.payment.next.month),beside = T,legend.text = T, main="Education vs Defaultpayment")
+barplot(table(data1$MARRIAGE,data1$default.payment.next.month),beside = T,legend.text = T, main="Marriage vs  Defaultpayment")
+barplot(table(data2$education,data2$marital),beside = T,legend.text = T, main="Education vs Marry status")
+barplot(table(data2$education,data2$y),beside = T,legend.text = T, main="Education vs Responsevariable")
+barplot(table(data2$marital,data2$y),beside = T,legend.text = T, main="Marrystatus vs Responsevariable")
+```
+
+
+###Comparison and contrast of common numerical variable age in the both dataset
+
+In the predictive analysis of the credit card default payment(dataset 01) did not involved any teen ages but whereas in the predictive analysis of Bank marketing(dataset 02) teen ages were involved. In the both datasets most of the people aged between 30 to 40 were involved.
+
+In the predictive analysis of both dataset married people opted options more than singles so as per analysis it seem married person are more responsible(subscribed for term deposit for future saving) than single people and they don't needanymore commitment and so they opted for default credible. But most of the educated people didn't subscribed term deposit where as more educated people opted for default payment.
+
+
+The dataset 02 doesn't have any privacy data so there will not be any GDPR issue. As the dataset02 had being analysed using CRISP-DM methodology, it is in the detailed form with all required information which motivates me to select this dataset for this assignment and also I will select this dataset for my final project as well. Being the part of FinTech programme the banking dataset will be better suits the data analyst project.
+
+
+##References:
+[1] Fayyad, Usama, Gregory Piatetsky-Shapiro, and Padhraic Smyth. 1996. "The Kdd Process for Extracting Useful Knowledge from Volumes of Data."
+[2] Soui, M., Smiti, S., Bribech, S., Gasmi, I.
+Credit card default prediction as a classification problem
+(2018) Lecture Notes in Computer Science (including subseries Lecture Notes in Artificial Intelligence
+and Lecture Notes in Bioinformatics), 10868 LNAI, pp. 88-100.
+[3] S. Moro, P. Cortez and P. Rita. 2014. "A Data-Driven Approach to Predict the Success of Bank Telemarketing. Decision Support Systems", In press, http://dx.doi.org/10.1016/j.dss.2014.03.001
+[4] Olson, D.L. & Chae, B. 2012, "Direct marketing decision support through predictive customer response modeling", Decision Support Systems, vol. 54, no. 1, pp. 443-451.
+[5] Olden J.D., Lawler J.J. and Poff N.L., 2008. Machine learning methods without tears: A primer for
+ecologists. Q. Rev. Biol., 83, 171-193.
+[6] OLAYA-MARÍN, E.J., MARTÍNEZ-CAPEL, F. and VEZZA, P., 2013. A comparison of artificial neural networks and random forests to predict native fish species richness in Mediterranean rivers. Knowledge and Management of Aquatic Ecosystems, (409),.
+[7] S. Moro, R. Laureano and P. Cortez. Using Data Mining for Bank Direct Marketing: An Application of the CRISP-DM Methodology. In P. Novais et al. (Eds.), Proceedings of the European Simulation and Modelling Conference - ESM'2011, pp. 117-121, Guimaraes, Portugal, October, 2011. EUROSIS. [bank.zip]
